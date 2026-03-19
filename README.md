@@ -4,21 +4,9 @@
 
 ---
 
-## 🌐 Live Site
-
-**[View the live site →](https://your-username.github.io/your-repo-name)**
-
-> Replace the link above with your actual GitHub Pages URL once deployed.
-
----
-
 ## 📋 About the Project
 
 MyMobility is a static website built as a creative project exploring what it means to design for everyone. The site covers wheelchair types, key features to look for, and the web accessibility standards that make digital content usable by all people — regardless of ability.
-
-The project was driven by a simple question: *how many websites actually meet accessibility standards, and what does it look like when one truly does?*
-
-The answer became the site itself.
 
 ---
 
@@ -63,42 +51,6 @@ All preferences are saved to `localStorage` and restored on return visits.
 ├── script.js       # Toolbar logic, translation dictionary, colour blind filters
 └── README.md       # This file
 ```
-
-No build tools, no frameworks, no dependencies. Pure HTML, CSS, and vanilla JavaScript.
-
----
-
-## 🚀 Running Locally
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   ```
-
-2. Open `index.html` directly in your browser — no server needed.
-
-   Or use a simple local server for best results:
-   ```bash
-   # Python 3
-   python -m http.server 8000
-
-   # Node.js (npx)
-   npx serve .
-   ```
-
-3. Visit `http://localhost:8000`
-
----
-
-## 📦 Deploying to GitHub Pages
-
-1. Push all files to the **root** of your `main` branch
-2. Go to your repo → **Settings** → **Pages**
-3. Under *Branch*, select `main` and click **Save**
-4. Your site will be live at:
-   ```
-   https://your-username.github.io/your-repo-name
-   ```
 
 ---
 
@@ -177,12 +129,6 @@ The following tools were used during development:
 - [WHO Wheelchair Guidelines](https://www.who.int/teams/assistive-and-medical-technology/assistive-technology/wheelchairs)
 - [United Spinal Association](https://unitedspinal.org)
 - [WebAIM — Web Accessibility In Mind](https://webaim.org)
-
----
-
-## 📄 Licence
-
-This project is open source and available under the [MIT Licence](LICENSE).
 
 ---
 
