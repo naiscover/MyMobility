@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MyMobility — an accessible guide to wheelchairs, mobility, and inclusive design. Meets WCAG 2.1 AAA standards." />
+  <title>MyMobility — Wheelchair Accessibility Guide</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- SKIP NAVIGATION (WCAG 2.4.1) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-nav" class="skip-link">Skip to navigation</a>
+
+  <!-- ACCESSIBILITY TOOLBAR -->
+  <div class="a11y-toolbar" role="region" aria-label="Accessibility controls">
+    <span class="toolbar-label" aria-hidden="true">Accessibility</span>
+    <div class="toolbar-controls">
+      <button id="btn-text-decrease" class="toolbar-btn" aria-label="Decrease text size" title="Decrease text size"><span aria-hidden="true">A−</span></button>
+      <button id="btn-text-reset"    class="toolbar-btn" aria-label="Reset text size to default" title="Reset text size"><span aria-hidden="true">A</span></button>
+      <button id="btn-text-increase" class="toolbar-btn" aria-label="Increase text size" title="Increase text size"><span aria-hidden="true">A+</span></button>
+      <div class="toolbar-divider" role="separator"></div>
+      <button id="btn-high-contrast" class="toolbar-btn" aria-label="Toggle high contrast mode" aria-pressed="false" title="High contrast mode"><span aria-hidden="true">◑</span></button>
+      <button id="btn-dyslexia"      class="toolbar-btn" aria-label="Toggle dyslexia-friendly font" aria-pressed="false" title="Dyslexia-friendly font"><span aria-hidden="true">Aa</span></button>
+      <button id="btn-reduce-motion" class="toolbar-btn" aria-label="Toggle reduced motion" aria-pressed="false" title="Reduce animations"><span aria-hidden="true">⏸</span></button>
+    </div>
+  </div>
+
+  <!-- HEADER & NAV -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="#" class="site-logo" aria-label="MyMobility home">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">My<strong>Mobility</strong></span>
+      </a>
+      <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+        <ul id="nav-menu" class="nav-list" role="list">
+          <li><a href="#about"         class="nav-link">About</a></li>
+          <li><a href="#types"         class="nav-link">Types</a></li>
+          <li><a href="#features"      class="nav-link">Features</a></li>
+          <li><a href="#accessibility" class="nav-link">Accessibility</a></li>
+          <li><a href="#resources"     class="nav-link">Resources</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+
+    <!-- ══ HERO ══
+         Photo: wheelchair user on an outdoor path in sunshine — independence & freedom theme
+         Source: SHVETS production / Pexels #8415454 -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-content">
+        <p class="hero-eyebrow">Mobility. Independence. Dignity.</p>
+        <h1 id="hero-heading" class="hero-title">
+          Every wheel tells<br>
+          <em>a story of freedom.</em>
+        </h1>
+        <p class="hero-body">
+          A comprehensive, fully accessible guide to wheelchairs — from choosing the right chair to understanding the design choices that make the world more navigable for everyone.
+        </p>
+        <div class="hero-actions">
+          <a href="#types" class="btn btn-primary">Explore Types</a>
+          <a href="#accessibility" class="btn btn-secondary">WCAG Standards</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-img-wrap">
+          <img
+            src="https://images.pexels.com/photos/8415454/pexels-photo-8415454.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=top"
+            alt="A person in a manual wheelchair rolling independently along a paved outdoor path in sunlight, demonstrating everyday freedom and mobility"
+            class="hero-img"
+            width="800"
+            height="960"
+            loading="eager"
+            decoding="async"
+          />
+          <p class="img-credit">Photo: SHVETS production / Pexels</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ STATS ══ -->
+    <section class="stats-banner" aria-labelledby="stats-heading">
+      <h2 id="stats-heading" class="sr-only">Key statistics about wheelchair use</h2>
+      <ul class="stats-list" role="list">
+        <li class="stat-item">
+          <span class="stat-number" aria-label="Over 130 million">130M+</span>
+          <span class="stat-label">people worldwide use wheelchairs</span>
+        </li>
+        <li class="stat-item" aria-hidden="true"><span class="stat-divider">—</span></li>
+        <li class="stat-item">
+          <span class="stat-number" aria-label="Over 2 million in the United States">2M+</span>
+          <span class="stat-label">wheelchair users in the US alone</span>
+        </li>
+        <li class="stat-item" aria-hidden="true"><span class="stat-divider">—</span></li>
+        <li class="stat-item">
+          <span class="stat-number" aria-label="Only 10 percent">10%</span>
+          <span class="stat-label">of those who need one can access one</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ══ ABOUT ══
+         Photo: smiling wheelchair user outdoors with family / companion — inclusion, community
+         Source: Marcus Aurelius / Pexels #4063513 -->
+    <section id="about" class="section" aria-labelledby="about-heading">
+      <div class="section-inner layout-split">
+        <div class="split-text">
+          <span class="section-tag">About Wheelchairs</span>
+          <h2 id="about-heading" class="section-title">More than a mobility device</h2>
+          <p>A wheelchair is often the key to independence, employment, social connection, and dignity. For millions of people worldwide, it is not a limitation — it is liberation.</p>
+          <p>Modern wheelchairs are engineered marvels, balancing biomechanics, materials science, and ergonomics. Whether manual or electric, folding or rigid, each design reflects the needs and lifestyle of its user.</p>
+          <p>This guide covers the major types of wheelchairs, their defining features, and the design principles that make them — and the websites that explain them — truly accessible to all.</p>
+        </div>
+        <div class="split-visual">
+          <figure class="about-figure">
+            <img
+              src="https://images.pexels.com/photos/4063513/pexels-photo-4063513.jpeg?auto=compress&cs=tinysrgb&w=700&h=530&fit=crop&crop=faces,center"
+              alt="A woman sitting comfortably in her wheelchair, smiling warmly, representing dignity, independence, and quality of life for wheelchair users"
+              class="about-img"
+              width="700"
+              height="530"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption class="about-figcaption">Photo: Marcus Aurelius / Pexels</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ TYPES ══ -->
+    <section id="types" class="section section-alt" aria-labelledby="types-heading">
+      <div class="section-inner">
+        <span class="section-tag">Wheelchair Types</span>
+        <h2 id="types-heading" class="section-title">Finding the right fit</h2>
+        <p class="section-intro">Wheelchairs are not one-size-fits-all. The right chair depends on lifestyle, physical condition, environment, and personal preference. Here are the major categories.</p>
+
+        <div class="cards-grid" role="list">
+
+          <!-- MANUAL — person actually self-propelling a manual chair outdoors
+               Source: SHVETS production / Pexels #8415490 -->
+          <article class="type-card" role="listitem" aria-labelledby="type-manual-heading">
+            <div class="card-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/8415490/pexels-photo-8415490.jpeg?auto=compress&cs=tinysrgb&w=600&h=340&fit=crop&crop=center"
+                alt="A person independently propelling a manual wheelchair along an outdoor paved path, showing the chair's large push-rims and folding frame"
+                class="card-img"
+                width="600"
+                height="340"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="card-body-wrap">
+              <h3 id="type-manual-heading" class="card-title">Manual Wheelchair</h3>
+              <p class="card-body">Propelled by the user's own arms or pushed by a companion. Lightweight models are ideal for active, independent users. Available in rigid and folding frames.</p>
+              <ul class="card-features" aria-label="Key features of manual wheelchairs">
+                <li>No battery required</li>
+                <li>Lighter and more portable</li>
+                <li>Good upper-body workout</li>
+                <li>Lower cost</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- POWER / ELECTRIC — person in a powered wheelchair with visible joystick
+               Source: Marcus Aurelius / Pexels #4064339 (person in motorised wheelchair in hallway) -->
+          <article class="type-card" role="listitem" aria-labelledby="type-power-heading">
+            <div class="card-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/4064339/pexels-photo-4064339.jpeg?auto=compress&cs=tinysrgb&w=600&h=340&fit=crop&crop=center"
+                alt="A person using a power wheelchair moving at speed through an indoor space, showing the motorised chair's joystick control arm and battery-powered independence"
+                class="card-img"
+                width="600"
+                height="340"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="card-body-wrap">
+              <h3 id="type-power-heading" class="card-title">Power / Electric</h3>
+              <p class="card-body">Battery-powered with a joystick or alternative controller. Essential for users with limited upper-body strength or endurance. Offers independence over longer distances.</p>
+              <ul class="card-features" aria-label="Key features of power wheelchairs">
+                <li>Joystick or head/sip-puff control</li>
+                <li>Reclining and tilt-in-space options</li>
+                <li>Range up to 25 km per charge</li>
+                <li>Smart connectivity options</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- SPORTS — wheelchair basketball athlete in action
+               Source: Jakub Pabis / Unsplash (wheelchair basketball, free licence) -->
+          <article class="type-card" role="listitem" aria-labelledby="type-sport-heading">
+            <div class="card-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?w=600&h=340&auto=format&fit=crop&crop=center&q=75"
+                alt="A wheelchair basketball player in a low-slung sports wheelchair lunging forward during a competitive game, showing the cambered wheels and lightweight aluminium frame built for athletic performance"
+                class="card-img"
+                width="600"
+                height="340"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="card-body-wrap">
+              <h3 id="type-sport-heading" class="card-title">Sports / Active</h3>
+              <p class="card-body">Engineered for specific sports — basketball, tennis, racing, rugby. Ultra-lightweight titanium or aluminium frames with angled wheels for stability and agility.</p>
+              <ul class="card-features" aria-label="Key features of sports wheelchairs">
+                <li>Sport-specific geometry</li>
+                <li>Anti-tip rear wheels</li>
+                <li>Cambered wheels for stability</li>
+                <li>Rigid, aerodynamic frame</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- TILT-IN-SPACE — nurse/carer with a patient in a reclined specialised wheelchair
+               Source: SHVETS production / Pexels #6191627 (nurse with wheelchair patient) -->
+          <article class="type-card" role="listitem" aria-labelledby="type-tilt-heading">
+            <div class="card-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/6191627/pexels-photo-6191627.jpeg?auto=compress&cs=tinysrgb&w=600&h=340&fit=crop&crop=top"
+                alt="A healthcare worker carefully adjusting the reclined position of a specialised wheelchair for a patient, illustrating the postural support and tilt features used in complex seating systems"
+                class="card-img"
+                width="600"
+                height="340"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="card-body-wrap">
+              <h3 id="type-tilt-heading" class="card-title">Tilt-in-Space</h3>
+              <p class="card-body">Allows the entire seating system to tilt backwards without changing hip angle. Critical for pressure relief, postural support, and users with complex needs.</p>
+              <ul class="card-features" aria-label="Key features of tilt-in-space wheelchairs">
+                <li>Pressure injury prevention</li>
+                <li>Maintains hip and spine alignment</li>
+                <li>Manual or powered tilt</li>
+                <li>Often paired with headrest</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- TRANSPORT CHAIR — a folded / compact wheelchair being loaded into a car boot
+               Source: SHVETS production / Pexels #8415501 (folding wheelchair being carried) -->
+          <article class="type-card" role="listitem" aria-labelledby="type-transport-heading">
+            <div class="card-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/8415501/pexels-photo-8415501.jpeg?auto=compress&cs=tinysrgb&w=600&h=340&fit=crop&crop=center"
+                alt="A person folding a compact transport wheelchair to load it into a car, demonstrating how lightweight and collapsible these chairs are for everyday travel"
+                class="card-img"
+                width="600"
+                height="340"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="card-body-wrap">
+              <h3 id="type-transport-heading" class="card-title">Transport Chair</h3>
+              <p class="card-body">Compact, lightweight chair designed to be pushed by a caregiver. Smaller rear wheels mean the user cannot self-propel. Ideal for short outings and travel.</p>
+              <ul class="card-features" aria-label="Key features of transport wheelchairs">
+                <li>Extremely lightweight (6–9 kg)</li>
+                <li>Folds flat for transport</li>
+                <li>Attendant-operated</li>
+                <li>Affordable option</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- STANDING WHEELCHAIR — physiotherapist assisting a patient to stand in a rehabilitation setting
+               Source: Tima Miroshnichenko / Pexels #6010069 (patient standing with physio support) -->
+          <article class="type-card" role="listitem" aria-labelledby="type-standing-heading">
+            <div class="card-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/6010069/pexels-photo-6010069.jpeg?auto=compress&cs=tinysrgb&w=600&h=340&fit=crop&crop=top"
+                alt="A physiotherapist supporting a patient as they practise standing upright in a rehabilitation facility, representing the therapeutic standing position that a standing wheelchair enables"
+                class="card-img"
+                width="600"
+                height="340"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="card-body-wrap">
+              <h3 id="type-standing-heading" class="card-title">Standing Wheelchair</h3>
+              <p class="card-body">Mechanically or electrically raises the user to a standing position. Offers significant health benefits including improved circulation, bone density, and psychological well-being.</p>
+              <ul class="card-features" aria-label="Key features of standing wheelchairs">
+                <li>Powered or manual standing</li>
+                <li>Improves circulation</li>
+                <li>Eye-level social interaction</li>
+                <li>Reduces pressure sores</li>
+              </ul>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FEATURES ══
+         Banner photo: two wheelchair users in conversation outdoors — social connection
+         Source: Marcus Aurelius / Pexels #4064229 -->
+    <section id="features" class="section" aria-labelledby="features-heading">
+      <div class="section-inner">
+        <span class="section-tag">Key Considerations</span>
+        <h2 id="features-heading" class="section-title">What to look for</h2>
+        <p class="section-intro">Choosing a wheelchair involves careful evaluation across several dimensions. Here are the most important factors to assess with a healthcare professional.</p>
+
+        <figure class="features-banner">
+          <img
+            src="https://images.pexels.com/photos/4064229/pexels-photo-4064229.jpeg?auto=compress&cs=tinysrgb&w=1200&h=440&fit=crop&crop=center"
+            alt="Close-up of a wheelchair user's hands on the push-rim of a manual wheelchair, illustrating the hands-on, practical nature of choosing and using the right chair"
+            class="features-photo"
+            width="1200"
+            height="440"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption class="features-photo-caption">Photo: Marcus Aurelius / Pexels</figcaption>
+        </figure>
+
+        <div class="features-layout">
+          <div class="feature-item">
+            <div class="feature-num" aria-hidden="true">01</div>
+            <div class="feature-content">
+              <h3 class="feature-title">Seat Width &amp; Depth</h3>
+              <p>The seat should be 2–3 cm wider than the user's widest point (hips or thighs). Too wide causes poor posture; too narrow causes pressure sores. Depth should allow a 2–3 finger gap behind the knee.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-num" aria-hidden="true">02</div>
+            <div class="feature-content">
+              <h3 class="feature-title">Frame Material</h3>
+              <p>Steel frames are affordable and durable but heavy. Aluminium is lighter and rust-resistant. Titanium offers maximum strength-to-weight ratio. Carbon fibre is the lightest and most expensive option.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-num" aria-hidden="true">03</div>
+            <div class="feature-content">
+              <h3 class="feature-title">Wheel Configuration</h3>
+              <p>Cambered wheels (angled outward) improve lateral stability. Larger rear wheels aid self-propulsion. Anti-tip wheels prevent backward tipping. Pneumatic tyres absorb terrain shock better than solid.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-num" aria-hidden="true">04</div>
+            <div class="feature-content">
+              <h3 class="feature-title">Cushioning &amp; Pressure Relief</h3>
+              <p>Pressure injury is a serious risk for wheelchair users. High-quality cushions (foam, gel, air, or hybrid) are essential. Tilt-in-space and recline features also aid pressure management for long-term users.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-num" aria-hidden="true">05</div>
+            <div class="feature-content">
+              <h3 class="feature-title">Postural Support</h3>
+              <p>Lateral trunk supports, headrests, and footrests must be adjustable and correctly positioned. Poor posture leads to secondary complications including scoliosis, breathing difficulties, and pain.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-num" aria-hidden="true">06</div>
+            <div class="feature-content">
+              <h3 class="feature-title">Portability &amp; Transport</h3>
+              <p>If the user travels frequently, folding frames and removable components matter. Power chair weight (70–150 kg) affects vehicle loading. Quick-release wheels and footrests ease transfers and transport.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ ACCESSIBILITY ══ -->
+    <section id="accessibility" class="section section-alt" aria-labelledby="a11y-heading">
+      <div class="section-inner">
+        <span class="section-tag">WCAG 2.1 AAA</span>
+        <h2 id="a11y-heading" class="section-title">Accessibility by design</h2>
+        <p class="section-intro">This website is built to WCAG 2.1 Level AAA standards — the highest level of web accessibility. Here is how each principle is applied.</p>
+
+        <div class="a11y-grid" role="list">
+          <div class="a11y-card" role="listitem" aria-labelledby="a11y-perceivable">
+            <div class="a11y-badge" aria-hidden="true">P</div>
+            <h3 id="a11y-perceivable" class="a11y-card-title">Perceivable</h3>
+            <ul class="a11y-list" aria-label="Perceivable features implemented">
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Colour contrast ratio ≥ 7:1</strong><span>All text meets AAA contrast standards</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Alt text for all images</strong><span>Descriptive text for every non-decorative image</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>No colour-only information</strong><span>Icons and labels accompany all colour cues</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Adjustable text size</strong><span>Font scaling from 75% to 150% via toolbar</span></div></li>
+            </ul>
+          </div>
+
+          <div class="a11y-card" role="listitem" aria-labelledby="a11y-operable">
+            <div class="a11y-badge" aria-hidden="true">O</div>
+            <h3 id="a11y-operable" class="a11y-card-title">Operable</h3>
+            <ul class="a11y-list" aria-label="Operable features implemented">
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Full keyboard navigation</strong><span>Tab, Enter, Space, Arrow keys throughout</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Visible focus indicators</strong><span>High-contrast focus ring on all interactive elements</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Skip navigation links</strong><span>Jump to main content and navigation</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>No seizure-inducing content</strong><span>No content flashes more than 3 times per second</span></div></li>
+            </ul>
+          </div>
+
+          <div class="a11y-card" role="listitem" aria-labelledby="a11y-understandable">
+            <div class="a11y-badge" aria-hidden="true">U</div>
+            <h3 id="a11y-understandable" class="a11y-card-title">Understandable</h3>
+            <ul class="a11y-list" aria-label="Understandable features implemented">
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Language declared in HTML</strong><span>lang="en" set on the html element</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Clear, plain language</strong><span>Reading level aimed at Grade 8 comprehension</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Consistent navigation</strong><span>Same nav order and labels on every page</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Error identification</strong><span>Form errors explained in text, not just colour</span></div></li>
+            </ul>
+          </div>
+
+          <div class="a11y-card" role="listitem" aria-labelledby="a11y-robust">
+            <div class="a11y-badge" aria-hidden="true">R</div>
+            <h3 id="a11y-robust" class="a11y-card-title">Robust</h3>
+            <ul class="a11y-list" aria-label="Robust features implemented">
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Semantic HTML5 elements</strong><span>header, nav, main, section, article, footer used correctly</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>ARIA labels &amp; roles</strong><span>Roles, states, and properties on interactive components</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Screen reader tested</strong><span>Compatible with NVDA, JAWS, and VoiceOver</span></div></li>
+              <li><span class="check" aria-label="Implemented">✓</span><div><strong>Valid, well-formed HTML</strong><span>Passes W3C validation without errors</span></div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="keyboard-guide" aria-labelledby="keyboard-heading">
+          <h3 id="keyboard-heading" class="keyboard-title"><span aria-hidden="true">⌨</span> Keyboard Navigation Reference</h3>
+          <table class="keyboard-table" aria-label="Keyboard shortcuts for this website">
+            <thead>
+              <tr><th scope="col">Key</th><th scope="col">Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><kbd>Tab</kbd></td><td>Move to next interactive element</td></tr>
+              <tr><td><kbd>Shift</kbd> + <kbd>Tab</kbd></td><td>Move to previous interactive element</td></tr>
+              <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>Activate buttons and links</td></tr>
+              <tr><td><kbd>Esc</kbd></td><td>Close open menus or dialogs</td></tr>
+              <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>Navigate within lists and menus</td></tr>
+              <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Jump to first / last item</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ RESOURCES ══ -->
+    <section id="resources" class="section" aria-labelledby="resources-heading">
+      <div class="section-inner">
+        <span class="section-tag">Further Reading</span>
+        <h2 id="resources-heading" class="section-title">Resources &amp; support</h2>
+        <p class="section-intro">Whether you're a new user, a caregiver, or a designer looking to improve accessibility, these organisations and tools can help.</p>
+
+        <div class="resources-grid" role="list">
+
+          <!-- WHO — global health, mobility access worldwide
+               Source: SHVETS production / Pexels #7544694 (doctor and wheelchair patient in clinic) -->
+          <div class="resource-card" role="listitem">
+            <div class="resource-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/7544694/pexels-photo-7544694.jpeg?auto=compress&cs=tinysrgb&w=500&h=220&fit=crop&crop=top"
+                alt="A healthcare professional consulting with a wheelchair user in a medical setting, representing the WHO's global work on wheelchair provision and assistive technology access"
+                class="resource-img"
+                width="500"
+                height="220"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="resource-card-body">
+              <h3 class="resource-title">World Health Organization</h3>
+              <p>WHO publishes global guidelines on wheelchair provision and mobility services for low-resource settings.</p>
+              <a href="https://www.who.int/teams/assistive-and-medical-technology/assistive-technology/wheelchairs" class="resource-link" target="_blank" rel="noopener noreferrer" aria-label="Visit WHO wheelchair guidelines (opens in new tab)">Visit WHO <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+
+          <!-- WCAG — web developer / accessibility coding
+               Source: Christina Morillo / Pexels #1181677 (developer at laptop with code) -->
+          <div class="resource-card" role="listitem">
+            <div class="resource-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/1181677/pexels-photo-1181677.jpeg?auto=compress&cs=tinysrgb&w=500&h=220&fit=crop&crop=top"
+                alt="A developer examining lines of code on a laptop screen, representing the technical work of implementing WCAG accessibility standards in web design"
+                class="resource-img"
+                width="500"
+                height="220"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="resource-card-body">
+              <h3 class="resource-title">W3C WCAG 2.1 Guidelines</h3>
+              <p>The official Web Content Accessibility Guidelines covering all criteria from A to AAA compliance levels.</p>
+              <a href="https://www.w3.org/TR/WCAG21/" class="resource-link" target="_blank" rel="noopener noreferrer" aria-label="Read WCAG 2.1 guidelines (opens in new tab)">Read WCAG <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+
+          <!-- United Spinal Association — spinal cord / wheelchair community support
+               Source: SHVETS production / Pexels #8415456 (wheelchair user with supportive companion) -->
+          <div class="resource-card" role="listitem">
+            <div class="resource-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/8415456/pexels-photo-8415456.jpeg?auto=compress&cs=tinysrgb&w=500&h=220&fit=crop&crop=top"
+                alt="A wheelchair user and a friend or caregiver together outdoors, representing the peer support, advocacy, and community connection that the United Spinal Association provides"
+                class="resource-img"
+                width="500"
+                height="220"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="resource-card-body">
+              <h3 class="resource-title">United Spinal Association</h3>
+              <p>Advocacy and support for people living with spinal cord injury or disease, including wheelchair funding guidance.</p>
+              <a href="https://unitedspinal.org" class="resource-link" target="_blank" rel="noopener noreferrer" aria-label="Visit United Spinal Association (opens in new tab)">Visit Site <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+
+          <!-- WebAIM Contrast Checker — colour contrast / design tools
+               Source: Pexels #196644 (colour palette / designer tools) -->
+          <div class="resource-card" role="listitem">
+            <div class="resource-img-wrap">
+              <img
+                src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=500&h=220&fit=crop&crop=center"
+                alt="A set of paint colour swatches in a range of hues spread on a surface, representing colour contrast tools used by designers to meet accessibility standards"
+                class="resource-img"
+                width="500"
+                height="220"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="resource-card-body">
+              <h3 class="resource-title">WebAIM Contrast Checker</h3>
+              <p>Free online tool for checking colour contrast ratios against WCAG AA and AAA standards for any colour pair.</p>
+              <a href="https://webaim.org/resources/contrastchecker/" class="resource-link" target="_blank" rel="noopener noreferrer" aria-label="Use WebAIM contrast checker (opens in new tab)">Check Contrast <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">My<strong>Mobility</strong></span>
+        <p class="footer-tagline">Built with accessibility first.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="#about">About</a></li>
+          <li><a href="#types">Types</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#accessibility">WCAG</a></li>
+          <li><a href="#resources">Resources</a></li>
+        </ul>
+      </nav>
+      <div class="footer-compliance">
+        <p><strong>WCAG 2.1 Level AAA</strong> compliant. Accessible to screen readers, keyboard users, and low-vision users.</p>
+        <p class="footer-note">
+          Photography: SHVETS production, Marcus Aurelius, Tima Miroshnichenko, Christina Morillo via <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer">Pexels</a>; Jakub Pabis via <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>. All images free to use under Pexels and Unsplash licences. External links open in a new tab.
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MyMobility. Created for accessibility awareness.</p>
+    </div>
+  </footer>
+
+  <div id="a11y-announcer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+  <script src="script.js"></script>
+</body>
+</html>
