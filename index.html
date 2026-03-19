@@ -26,6 +26,20 @@
       <button id="btn-high-contrast" class="toolbar-btn" aria-label="Toggle high contrast mode" aria-pressed="false" title="High contrast mode"><span aria-hidden="true">◑</span></button>
       <button id="btn-dyslexia"      class="toolbar-btn" aria-label="Toggle dyslexia-friendly font" aria-pressed="false" title="Dyslexia-friendly font"><span aria-hidden="true">Aa</span></button>
       <button id="btn-reduce-motion" class="toolbar-btn" aria-label="Toggle reduced motion" aria-pressed="false" title="Reduce animations"><span aria-hidden="true">⏸</span></button>
+      <div class="toolbar-divider" role="separator"></div>
+      <div class="toolbar-select-wrap">
+        <label for="select-colorblind" class="sr-only">Colour blind mode</label>
+        <select id="select-colorblind" class="toolbar-select" aria-label="Select colour blind simulation mode" title="Colour blind mode">
+          <option value="none">Colour</option>
+          <option value="deuteranopia">Deuteranopia</option>
+          <option value="protanopia">Protanopia</option>
+          <option value="tritanopia">Tritanopia</option>
+        </select>
+      </div>
+      <div class="toolbar-divider" role="separator"></div>
+      <button id="btn-lang" class="toolbar-btn lang-btn" aria-label="Switch language to French" aria-pressed="false" title="Translate to French / Traduire en francais">
+        <span id="lang-label" aria-hidden="true">FR</span>
+      </button>
     </div>
   </div>
 
@@ -60,7 +74,7 @@
       <div class="hero-content">
         <p class="hero-eyebrow">Mobility. Independence. Dignity.</p>
         <h1 id="hero-heading" class="hero-title">
-          Every wheel tells<br>
+          <span class="hero-title-line1">Every wheel tells</span><br>
           <em>a story of freedom.</em>
         </h1>
         <p class="hero-body">
