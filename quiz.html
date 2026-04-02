@@ -16,7 +16,7 @@
     /* Hero */
     .quiz-hero {
       background: var(--clr-accent);
-      color: #fff;
+      color: var(--clr-on-accent);
       padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 4rem);
       position: relative;
       overflow: hidden;
@@ -35,18 +35,18 @@
       z-index: 1;
     }
     .quiz-hero .section-tag {
-      color: rgba(255,255,255,0.7);
-      border-color: rgba(255,255,255,0.3);
+      color: var(--clr-on-accent-soft);
+      border-color: var(--clr-on-accent-soft);
     }
     .quiz-hero h1 {
       font-family: var(--font-display);
       font-size: clamp(2rem, 5.5vw, 3.5rem);
-      color: #fff;
+      color: var(--clr-on-accent);
       line-height: 1.1;
       margin: var(--space-md) 0 var(--space-md);
     }
     .quiz-hero p {
-      color: rgba(255,255,255,0.85);
+      color: var(--clr-on-accent-muted);
       font-size: var(--text-lg);
       line-height: 1.7;
       max-width: 560px;
@@ -58,10 +58,10 @@
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: var(--radius-md);
       font-size: var(--text-sm);
-      color: rgba(255,255,255,0.8);
+      color: var(--clr-on-accent-muted);
       max-width: 560px;
     }
-    .quiz-disclaimer strong { color: #fff; }
+    .quiz-disclaimer strong { color: var(--clr-on-accent); }
 
     /* ── QUIZ SHELL ── */
     .quiz-section {
@@ -181,7 +181,7 @@
       width: 1.5rem;
       height: 1.5rem;
       background: var(--clr-accent);
-      color: #fff;
+      color: var(--clr-on-accent);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -251,7 +251,7 @@
     /* Primary result card */
     .result-primary {
       background: var(--clr-accent);
-      color: #fff;
+      color: var(--clr-on-accent);
       border-radius: var(--radius-xl);
       padding: var(--space-2xl);
       margin: var(--space-xl) 0;
@@ -270,12 +270,12 @@
     .result-primary-name {
       font-family: var(--font-display);
       font-size: 1.6rem;
-      color: #fff;
+      color: var(--clr-on-accent);
       margin-bottom: var(--space-xs);
     }
     .result-primary-why {
       font-size: var(--text-base);
-      color: rgba(255,255,255,0.88);
+      color: var(--clr-on-accent-muted);
       line-height: 1.65;
     }
 

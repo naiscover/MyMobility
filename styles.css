@@ -15,6 +15,10 @@
   --clr-accent:       #1A4D2E;        /* deep forest green */
   --clr-accent-light: #2A7A4A;        /* lighter green for large text */
   --clr-accent-bg:    #E8F3EC;        /* tint for card backgrounds */
+  --clr-accent-hover: #0F3420;
+  --clr-on-accent:    #FFFFFF;
+  --clr-on-accent-muted: rgba(255,255,255,0.85);
+  --clr-on-accent-soft: rgba(255,255,255,0.7);
   --clr-highlight:    #C04B18;        /* rust/terracotta for accents */
   --clr-border:       #C5BEB4;
   --clr-focus:        #1A4D2E;        /* focus ring colour */
@@ -71,6 +75,10 @@
   --clr-accent:    #FFFF00;
   --clr-accent-light: #FFFF00;
   --clr-accent-bg: #1A1A00;
+  --clr-accent-hover: #E6E600;
+  --clr-on-accent: #000000;
+  --clr-on-accent-muted: rgba(0,0,0,0.88);
+  --clr-on-accent-soft: rgba(0,0,0,0.72);
   --clr-highlight: #FF6600;
   --clr-border:    #888888;
   --clr-focus:     #FFFF00;
@@ -244,7 +252,7 @@ button:focus-visible,
 .toolbar-btn[aria-pressed="true"] {
   background: var(--clr-accent-light);
   border-color: var(--clr-accent-light);
-  color: #fff;
+  color: var(--clr-on-accent);
 }
 
 .toolbar-btn:focus-visible {
@@ -454,13 +462,14 @@ button:focus-visible,
 
 .btn-primary {
   background: var(--clr-accent);
-  color: #FFFFFF;
+  color: var(--clr-on-accent);
   border-color: var(--clr-accent);
 }
 
 .btn-primary:hover {
-  background: #0F3420;
-  border-color: #0F3420;
+  background: var(--clr-accent-hover);
+  color: var(--clr-on-accent);
+  border-color: var(--clr-accent-hover);
   box-shadow: 0 4px 12px rgba(26,77,46,.3);
 }
 
@@ -873,7 +882,7 @@ button:focus-visible,
   width: 2.5rem;
   height: 2.5rem;
   background: var(--clr-accent);
-  color: #FFFFFF;
+  color: var(--clr-on-accent);
   font-family: var(--font-display);
   font-size: var(--text-xl);
   border-radius: 50%;
@@ -907,7 +916,7 @@ button:focus-visible,
   width: 1.5rem;
   height: 1.5rem;
   background: var(--clr-accent);
-  color: #FFFFFF;
+  color: var(--clr-on-accent);
   font-size: 0.75rem;
   font-weight: 700;
   border-radius: 50%;
