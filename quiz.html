@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Which wheelchair type might suit you? Take our short, accessible quiz to find a starting point for your wheelchair research. Part of MyMobility." />
+  <title>Wheelchair Quiz — MyMobility</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════
+       QUIZ PAGE STYLES
+    ══════════════════════════════════ */
+
+    /* Hero */
+    .quiz-hero {
+      background: var(--clr-accent);
+      color: #fff;
+      padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .quiz-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 60%, rgba(255,255,255,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .quiz-hero-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .quiz-hero .section-tag {
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.3);
+    }
+    .quiz-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5.5vw, 3.5rem);
+      color: #fff;
+      line-height: 1.1;
+      margin: var(--space-md) 0 var(--space-md);
+    }
+    .quiz-hero p {
+      color: rgba(255,255,255,0.85);
+      font-size: var(--text-lg);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+    .quiz-disclaimer {
+      margin-top: var(--space-lg);
+      padding: var(--space-md) var(--space-lg);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: rgba(255,255,255,0.8);
+      max-width: 560px;
+    }
+    .quiz-disclaimer strong { color: #fff; }
+
+    /* ── QUIZ SHELL ── */
+    .quiz-section {
+      padding: var(--space-3xl) clamp(1.5rem, 5vw, 4rem);
+      background: var(--clr-bg);
+    }
+    .quiz-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Progress bar */
+    .quiz-progress-wrap {
+      margin-bottom: var(--space-xl);
+    }
+    .quiz-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      margin-bottom: var(--space-sm);
+      font-weight: 500;
+    }
+    .quiz-progress-bar {
+      height: 6px;
+      background: var(--clr-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .quiz-progress-fill {
+      height: 100%;
+      background: var(--clr-accent);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Step container */
+    .quiz-step {
+      display: none;
+      animation: fadeSlideIn 0.35s ease forwards;
+    }
+    .quiz-step.active { display: block; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateX(18px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    [data-reduce-motion="true"] .quiz-step {
+      animation: none;
+    }
+
+    /* Question */
+    .quiz-question-num {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--clr-accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+    .quiz-question-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.35rem, 3.5vw, 1.8rem);
+      color: var(--clr-ink);
+      line-height: 1.3;
+      margin-bottom: var(--space-xl);
+    }
+
+    /* Options grid */
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    @media (max-width: 520px) {
+      .quiz-options { grid-template-columns: 1fr; }
+    }
+
+    /* Each option button */
+    .quiz-option {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      padding: var(--space-lg);
+      background: var(--clr-surface);
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color var(--transition), background var(--transition), box-shadow var(--transition), transform var(--transition);
+      font-family: var(--font-body);
+      position: relative;
+    }
+    .quiz-option:hover {
+      border-color: var(--clr-accent-light);
+      background: var(--clr-accent-bg);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-2px);
+    }
+    .quiz-option:focus-visible {
+      outline: 3px solid var(--clr-focus);
+      outline-offset: 3px;
+      background: var(--clr-focus-bg);
+      border-color: var(--clr-focus);
+    }
+    .quiz-option.selected {
+      border-color: var(--clr-accent);
+      background: var(--clr-accent-bg);
+      box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.15);
+    }
+    .quiz-option.selected::after {
+      content: '✓';
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--clr-accent);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.5rem;
+      text-align: center;
+    }
+    .option-icon {
+      font-size: 1.75rem;
+      line-height: 1;
+      margin-bottom: var(--space-xs);
+    }
+    .option-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--clr-ink);
+    }
+    .option-desc {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.5;
+    }
+
+    /* Nav buttons */
+    .quiz-nav {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .quiz-nav .btn-back {
+      margin-right: auto;
+    }
+
+    /* ── RESULTS ── */
+    .quiz-results {
+      display: none;
+    }
+    .quiz-results.active {
+      display: block;
+      animation: fadeSlideIn 0.4s ease forwards;
+    }
+
+    .results-eyebrow {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--clr-accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+    .results-heading {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      color: var(--clr-ink);
+      line-height: 1.15;
+      margin-bottom: var(--space-md);
+    }
+    .results-heading em {
+      color: var(--clr-accent);
+      font-style: italic;
+    }
+
+    /* Primary result card */
+    .result-primary {
+      background: var(--clr-accent);
+      color: #fff;
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin: var(--space-xl) 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+    @media (max-width: 520px) {
+      .result-primary { grid-template-columns: 1fr; text-align: center; }
+    }
+    .result-icon-big {
+      font-size: 4rem;
+      line-height: 1;
+    }
+    .result-primary-name {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: var(--space-xs);
+    }
+    .result-primary-why {
+      font-size: var(--text-base);
+      color: rgba(255,255,255,0.88);
+      line-height: 1.65;
+    }
+
+    /* Secondary recommendations */
+    .results-also {
+      margin-top: var(--space-xl);
+    }
+    .results-also-heading {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--clr-ink-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+    .result-secondary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-md);
+    }
+    .result-secondary-card {
+      background: var(--clr-surface);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      text-align: center;
+    }
+    .result-secondary-card .option-icon { display: block; margin-bottom: var(--space-sm); }
+    .result-secondary-card .option-label { display: block; font-weight: 700; color: var(--clr-ink); margin-bottom: var(--space-xs); }
+    .result-secondary-card .option-desc  { font-size: var(--text-sm); color: var(--clr-ink-muted); line-height: 1.5; }
+
+    /* Disclaimer */
+    .results-disclaimer {
+      margin-top: var(--space-xl);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--clr-accent-bg);
+      border-left: 4px solid var(--clr-accent);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.65;
+    }
+    .results-disclaimer strong { color: var(--clr-ink); }
+
+    /* Retake & navigation */
+    .results-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-top: var(--space-xl);
+    }
+
+    /* High contrast overrides */
+    [data-high-contrast="true"] .quiz-option {
+      background: var(--clr-bg);
+      border-color: var(--clr-ink);
+    }
+    [data-high-contrast="true"] .quiz-option.selected {
+      border-color: var(--clr-accent);
+      background: #1a1a00;
+    }
+    [data-high-contrast="true"] .result-primary {
+      background: var(--clr-accent);
+      border: 2px solid var(--clr-accent);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SKIP NAVIGATION -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-nav" class="skip-link">Skip to navigation</a>
+
+  <!-- ACCESSIBILITY TOOLBAR -->
+  <div class="a11y-toolbar" role="region" aria-label="Accessibility controls">
+    <span class="toolbar-label" aria-hidden="true">Accessibility</span>
+    <div class="toolbar-controls">
+      <button id="btn-text-decrease" class="toolbar-btn" aria-label="Decrease text size"><span aria-hidden="true">A−</span></button>
+      <button id="btn-text-reset"    class="toolbar-btn" aria-label="Reset text size to default"><span aria-hidden="true">A</span></button>
+      <button id="btn-text-increase" class="toolbar-btn" aria-label="Increase text size"><span aria-hidden="true">A+</span></button>
+      <div class="toolbar-divider" role="separator"></div>
+      <button id="btn-high-contrast" class="toolbar-btn" aria-label="Toggle high contrast mode" aria-pressed="false"><span aria-hidden="true">◑</span></button>
+      <button id="btn-dyslexia"      class="toolbar-btn" aria-label="Toggle dyslexia-friendly font" aria-pressed="false"><span aria-hidden="true">Aa</span></button>
+      <button id="btn-reduce-motion" class="toolbar-btn" aria-label="Toggle reduced motion" aria-pressed="false"><span aria-hidden="true">⏸</span></button>
+      <div class="toolbar-divider" role="separator"></div>
+      <div class="toolbar-select-wrap">
+        <label for="select-colorblind" class="sr-only">Colour blind mode</label>
+        <select id="select-colorblind" class="toolbar-select" aria-label="Select colour blind simulation mode">
+          <option value="none">Colour</option>
+          <option value="deuteranopia">Deuteranopia</option>
+          <option value="protanopia">Protanopia</option>
+          <option value="tritanopia">Tritanopia</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER & NAV -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo" aria-label="MyMobility home">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">My<strong>Mobility</strong></span>
+      </a>
+      <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+        <ul id="nav-menu" class="nav-list" role="list">
+          <li><a href="index.html#about"         class="nav-link">About</a></li>
+          <li><a href="index.html#types"         class="nav-link">Types</a></li>
+          <li><a href="index.html#features"      class="nav-link">Features</a></li>
+          <li><a href="index.html#accessibility" class="nav-link">Accessibility</a></li>
+          <li><a href="index.html#resources"     class="nav-link">Resources</a></li>
+          <li><a href="history.html"             class="nav-link">History</a></li>
+          <li><a href="quiz.html"                class="nav-link" aria-current="page">Quiz</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+
+    <!-- HERO -->
+    <section class="quiz-hero" aria-labelledby="quiz-page-heading">
+      <div class="quiz-hero-inner">
+        <span class="section-tag">Interactive Quiz</span>
+        <h1 id="quiz-page-heading">Which wheelchair type<br>might suit you?</h1>
+        <p>Answer seven short questions about your lifestyle, physical needs, and environment to get a personalised starting point for your wheelchair research.</p>
+        <div class="quiz-disclaimer" role="note">
+          <strong>Important:</strong> This quiz is for general information only. Always consult a qualified occupational therapist, rehabilitation engineer, or medical professional before choosing a wheelchair.
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ BODY -->
+    <section class="quiz-section" aria-labelledby="quiz-form-heading">
+      <div class="quiz-inner">
+
+        <h2 id="quiz-form-heading" class="sr-only">Quiz questions</h2>
+
+        <!-- Progress -->
+        <div class="quiz-progress-wrap" id="quiz-progress-wrap" aria-hidden="true">
+          <div class="quiz-progress-label">
+            <span id="step-label">Question 1 of 7</span>
+            <span id="step-pct">0%</span>
+          </div>
+          <div class="quiz-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Quiz progress" id="progress-bar-wrap">
+            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- QUESTIONS -->
+        <div id="quiz-questions" aria-live="polite" aria-atomic="false">
+
+          <!-- Q1 -->
+          <div class="quiz-step active" id="step-1" role="group" aria-labelledby="q1-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 1 of 7</p>
+            <p class="quiz-question-text" id="q1-text">What is the primary reason you are looking into a wheelchair?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q1-text">
+              <button class="quiz-option" data-q="1" data-val="injury" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🦴</span>
+                <span class="option-label">Injury or recovery</span>
+                <span class="option-desc">A temporary or recent injury, surgery, or recovery period requiring short-term mobility support.</span>
+              </button>
+              <button class="quiz-option" data-q="1" data-val="chronic" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">♿</span>
+                <span class="option-label">Long-term disability</span>
+                <span class="option-desc">A permanent or long-term condition such as spinal cord injury, MS, muscular dystrophy, or paralysis.</span>
+              </button>
+              <button class="quiz-option" data-q="1" data-val="elderly" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🧓</span>
+                <span class="option-label">Age-related mobility</span>
+                <span class="option-desc">Reduced mobility or stamina due to ageing, needing assistance for longer distances or outings.</span>
+              </button>
+              <button class="quiz-option" data-q="1" data-val="sport" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏅</span>
+                <span class="option-label">Sport &amp; recreation</span>
+                <span class="option-desc">Participating in wheelchair sport, athletics, or active recreational activities.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-primary" id="next-1" disabled aria-disabled="true">Next →</button>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="quiz-step" id="step-2" role="group" aria-labelledby="q2-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 2 of 7</p>
+            <p class="quiz-question-text" id="q2-text">How would you describe your upper body strength and arm function?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q2-text">
+              <button class="quiz-option" data-q="2" data-val="strong" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">💪</span>
+                <span class="option-label">Good strength</span>
+                <span class="option-desc">I can propel myself with my arms comfortably for extended periods.</span>
+              </button>
+              <button class="quiz-option" data-q="2" data-val="moderate" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🤲</span>
+                <span class="option-label">Some arm function</span>
+                <span class="option-desc">I have limited arm movement or tire quickly but can manage some propulsion.</span>
+              </button>
+              <button class="quiz-option" data-q="2" data-val="limited" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🙌</span>
+                <span class="option-label">Very limited</span>
+                <span class="option-desc">Minimal arm function — I rely on others to push or need a powered alternative.</span>
+              </button>
+              <button class="quiz-option" data-q="2" data-val="none" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">❌</span>
+                <span class="option-label">No arm function</span>
+                <span class="option-desc">I cannot use my arms to self-propel at all and need full motorised control.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary btn-back" id="back-2">← Back</button>
+              <button class="btn btn-primary" id="next-2" disabled aria-disabled="true">Next →</button>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="quiz-step" id="step-3" role="group" aria-labelledby="q3-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 3 of 7</p>
+            <p class="quiz-question-text" id="q3-text">Where will you use the wheelchair most of the time?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q3-text">
+              <button class="quiz-option" data-q="3" data-val="indoor" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏠</span>
+                <span class="option-label">Mainly indoors</span>
+                <span class="option-desc">Home, offices, care facilities — mostly smooth, flat surfaces and corridors.</span>
+              </button>
+              <button class="quiz-option" data-q="3" data-val="outdoor" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🌳</span>
+                <span class="option-label">Mainly outdoors</span>
+                <span class="option-desc">Pavements, parks, varied terrain, ramps — active outdoor lifestyle.</span>
+              </button>
+              <button class="quiz-option" data-q="3" data-val="both" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏙️</span>
+                <span class="option-label">Mix of both</span>
+                <span class="option-desc">A combination of indoor and outdoor use throughout the day.</span>
+              </button>
+              <button class="quiz-option" data-q="3" data-val="sport" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏟️</span>
+                <span class="option-label">Sports venue / track</span>
+                <span class="option-desc">Courts, athletics tracks, sports halls — performance surfaces.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary btn-back" id="back-3">← Back</button>
+              <button class="btn btn-primary" id="next-3" disabled aria-disabled="true">Next →</button>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="quiz-step" id="step-4" role="group" aria-labelledby="q4-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 4 of 7</p>
+            <p class="quiz-question-text" id="q4-text">How important is portability and being able to fold or transport the chair?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q4-text">
+              <button class="quiz-option" data-q="4" data-val="very" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">✈️</span>
+                <span class="option-label">Very important</span>
+                <span class="option-desc">I travel frequently, use a car regularly, or need to fit the chair in tight spaces.</span>
+              </button>
+              <button class="quiz-option" data-q="4" data-val="somewhat" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🚗</span>
+                <span class="option-label">Somewhat important</span>
+                <span class="option-desc">I occasionally need to transport it, but portability isn't my top priority.</span>
+              </button>
+              <button class="quiz-option" data-q="4" data-val="little" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏡</span>
+                <span class="option-label">Not very important</span>
+                <span class="option-desc">The chair will stay in one place most of the time — a care setting or home.</span>
+              </button>
+              <button class="quiz-option" data-q="4" data-val="none" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🔒</span>
+                <span class="option-label">Not important at all</span>
+                <span class="option-desc">I need the most stable, feature-rich chair possible — portability is irrelevant.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary btn-back" id="back-4">← Back</button>
+              <button class="btn btn-primary" id="next-4" disabled aria-disabled="true">Next →</button>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="quiz-step" id="step-5" role="group" aria-labelledby="q5-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 5 of 7</p>
+            <p class="quiz-question-text" id="q5-text">Do you need to maintain an upright seated posture, or do you require postural support / recline?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q5-text">
+              <button class="quiz-option" data-q="5" data-val="upright" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🪑</span>
+                <span class="option-label">Upright works well</span>
+                <span class="option-desc">I can maintain a good sitting position without special postural support.</span>
+              </button>
+              <button class="quiz-option" data-q="5" data-val="some" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🛋️</span>
+                <span class="option-label">Some recline needed</span>
+                <span class="option-desc">I benefit from tilting or reclining to relieve pressure or manage fatigue.</span>
+              </button>
+              <button class="quiz-option" data-q="5" data-val="tilt" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">⚖️</span>
+                <span class="option-label">Significant tilt needed</span>
+                <span class="option-desc">I have significant postural challenges and need a tilt-in-space or full recline system.</span>
+              </button>
+              <button class="quiz-option" data-q="5" data-val="standing" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🧍</span>
+                <span class="option-label">I want to stand too</span>
+                <span class="option-desc">I'd like the ability to transition to a standing position for health or social reasons.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary btn-back" id="back-5">← Back</button>
+              <button class="btn btn-primary" id="next-5" disabled aria-disabled="true">Next →</button>
+            </div>
+          </div>
+
+          <!-- Q6 -->
+          <div class="quiz-step" id="step-6" role="group" aria-labelledby="q6-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 6 of 7</p>
+            <p class="quiz-question-text" id="q6-text">Will a caregiver or companion be pushing the wheelchair for you most of the time?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q6-text">
+              <button class="quiz-option" data-q="6" data-val="self" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🙋</span>
+                <span class="option-label">Mostly self-propelled</span>
+                <span class="option-desc">I want to be as independent as possible and prefer to move myself.</span>
+              </button>
+              <button class="quiz-option" data-q="6" data-val="assisted" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🤝</span>
+                <span class="option-label">Mostly pushed by others</span>
+                <span class="option-desc">A caregiver, family member, or companion will handle most of the pushing.</span>
+              </button>
+              <button class="quiz-option" data-q="6" data-val="mixed" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🔄</span>
+                <span class="option-label">Mix of both</span>
+                <span class="option-desc">Sometimes I self-propel, sometimes I'm pushed — I need flexibility.</span>
+              </button>
+              <button class="quiz-option" data-q="6" data-val="power" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">⚡</span>
+                <span class="option-label">Using a motor</span>
+                <span class="option-desc">I plan to use a power-assisted or fully electric chair — no pushing required.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary btn-back" id="back-6">← Back</button>
+              <button class="btn btn-primary" id="next-6" disabled aria-disabled="true">Next →</button>
+            </div>
+          </div>
+
+          <!-- Q7 -->
+          <div class="quiz-step" id="step-7" role="group" aria-labelledby="q7-text">
+            <p class="quiz-question-num" aria-hidden="true">Question 7 of 7</p>
+            <p class="quiz-question-text" id="q7-text">What best describes how you'd like to use a wheelchair day-to-day?</p>
+            <div class="quiz-options" role="radiogroup" aria-labelledby="q7-text">
+              <button class="quiz-option" data-q="7" data-val="active" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏃</span>
+                <span class="option-label">Active &amp; on the go</span>
+                <span class="option-desc">Fast, agile movement — work, errands, commuting, staying as independent as possible.</span>
+              </button>
+              <button class="quiz-option" data-q="7" data-val="comfort" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">☁️</span>
+                <span class="option-label">Comfort-focused</span>
+                <span class="option-desc">Long periods of seated comfort — managing fatigue, pressure, or chronic pain.</span>
+              </button>
+              <button class="quiz-option" data-q="7" data-val="sport" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">🏆</span>
+                <span class="option-label">Sport &amp; performance</span>
+                <span class="option-desc">Competitive or recreational sport — speed, agility, and performance matter most.</span>
+              </button>
+              <button class="quiz-option" data-q="7" data-val="occasional" aria-pressed="false">
+                <span class="option-icon" aria-hidden="true">📅</span>
+                <span class="option-label">Occasional use</span>
+                <span class="option-desc">Outings, appointments, shopping — supplementary to walking or other mobility.</span>
+              </button>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary btn-back" id="back-7">← Back</button>
+              <button class="btn btn-primary" id="submit-quiz" disabled aria-disabled="true">See My Results →</button>
+            </div>
+          </div>
+
+        </div><!-- /quiz-questions -->
+
+        <!-- RESULTS -->
+        <div class="quiz-results" id="quiz-results" aria-live="polite" aria-atomic="true" tabindex="-1">
+          <p class="results-eyebrow">Your personalised recommendation</p>
+          <h2 class="results-heading">Based on your answers, you might suit a<br><em id="result-name-inline">—</em></h2>
+
+          <div class="result-primary" id="result-primary" aria-label="Primary recommendation">
+            <div class="result-icon-big" id="result-icon" aria-hidden="true">♿</div>
+            <div>
+              <p class="result-primary-name" id="result-title">—</p>
+              <p class="result-primary-why" id="result-why">—</p>
+            </div>
+          </div>
+
+          <div class="results-also" id="results-also">
+            <p class="results-also-heading">You might also consider</p>
+            <div class="result-secondary-grid" id="result-secondary-grid"></div>
+          </div>
+
+          <div class="results-disclaimer" role="note">
+            <strong>Remember:</strong> This quiz gives a general starting point only. Wheelchair prescription is highly individual. Please speak with an <strong>occupational therapist</strong> or <strong>seating specialist</strong> who can assess your specific needs in person before making any decisions.
+          </div>
+
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="retake-quiz">← Retake Quiz</button>
+            <a href="index.html#types" class="btn btn-primary">Explore All Types →</a>
+            <a href="history.html" class="btn btn-secondary">History Timeline</a>
+          </div>
+        </div>
+
+      </div><!-- /quiz-inner -->
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">My<strong>Mobility</strong></span>
+        <p class="footer-tagline">Built with accessibility first.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#types">Types</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#accessibility">WCAG</a></li>
+          <li><a href="index.html#resources">Resources</a></li>
+          <li><a href="history.html">History</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+        </ul>
+      </nav>
+      <div class="footer-compliance">
+        <p><strong>WCAG 2.1 Level AAA</strong> compliant. Accessible to screen readers, keyboard users, and low-vision users.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MyMobility. Created for accessibility awareness.</p>
+    </div>
+  </footer>
+
+  <div id="a11y-announcer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+  <script src="script.js"></script>
+  <script>
+  /* ════════════════════════════════════════
+     QUIZ LOGIC
+  ════════════════════════════════════════ */
+  (function () {
+    'use strict';
+
+    const TOTAL_STEPS = 7;
+    let currentStep  = 1;
+    const answers    = {};  // { q1: 'val', q2: 'val', ... }
+
+    /* ── WHEELCHAIR PROFILES ── */
+    const PROFILES = {
+      manual: {
+        icon: '🦽',
+        name: 'Manual Wheelchair',
+        why: 'You have good arm strength, value portability, and want an active, independent lifestyle. A lightweight rigid or folding manual wheelchair gives you the freedom and agility you need — without a battery to charge.',
+        tags: ['strong', 'active', 'both', 'outdoor', 'self']
+      },
+      power: {
+        icon: '⚡',
+        name: 'Power Wheelchair',
+        why: 'Your answers suggest limited arm function or a need for full-day motorised independence. A power wheelchair gives you control without physical strain, with joystick or alternative drive systems available.',
+        tags: ['limited', 'none', 'power', 'chronic']
+      },
+      sports: {
+        icon: '🏅',
+        name: 'Sports Wheelchair',
+        why: 'You\'re active, competitive, or want the most agile manual option available. Sports wheelchairs — ultra-light with cambered wheels — are engineered for performance and are ideal for athletics, court sports, or simply fast everyday living.',
+        tags: ['sport', 'strong', 'active']
+      },
+      transport: {
+        icon: '🚌',
+        name: 'Transport / Companion Chair',
+        why: 'Your situation involves being primarily pushed by a carer or companion, and portability is important. Transport chairs are lightweight, fold easily for car travel, and are designed for assisted use — ideal for outings and appointments.',
+        tags: ['assisted', 'elderly', 'injury', 'very', 'occasional']
+      },
+      tilt: {
+        icon: '🔄',
+        name: 'Tilt-in-Space Wheelchair',
+        why: 'You need significant postural support, pressure relief, or long periods of comfortable seated positioning. Tilt-in-space systems redistribute weight without changing your seated posture angle — essential for complex postural needs.',
+        tags: ['tilt', 'some', 'comfort', 'chronic', 'limited']
+      },
+      standing: {
+        icon: '🧍',
+        name: 'Standing Wheelchair',
+        why: 'You\'d like the option to transition from sitting to standing during the day. Standing wheelchairs provide significant health benefits including improved circulation, bone density, and the ability to interact at eye level with others.',
+        tags: ['standing', 'power', 'chronic']
+      }
+    };
+
+    /* ── SCORING ENGINE ── */
+    function calculateResult() {
+      const scores = {};
+      Object.keys(PROFILES).forEach(k => { scores[k] = 0; });
+
+      const a = answers;
+
+      // Q1 — primary reason
+      if (a[1] === 'sport')    { scores.sports    += 4; scores.manual += 2; }
+      if (a[1] === 'injury')   { scores.transport += 3; scores.manual += 2; }
+      if (a[1] === 'elderly')  { scores.transport += 3; scores.tilt   += 1; }
+      if (a[1] === 'chronic')  { scores.power += 2; scores.tilt += 2; scores.standing += 1; }
+
+      // Q2 — upper body strength
+      if (a[2] === 'strong')   { scores.manual += 4; scores.sports  += 3; }
+      if (a[2] === 'moderate') { scores.manual += 2; scores.transport += 2; }
+      if (a[2] === 'limited')  { scores.power  += 3; scores.tilt    += 2; scores.transport += 1; }
+      if (a[2] === 'none')     { scores.power  += 5; scores.standing += 2; }
+
+      // Q3 — environment
+      if (a[3] === 'indoor')   { scores.power += 1; scores.tilt += 1; }
+      if (a[3] === 'outdoor')  { scores.manual += 2; scores.sports += 1; }
+      if (a[3] === 'both')     { scores.manual += 2; scores.power += 1; }
+      if (a[3] === 'sport')    { scores.sports += 5; }
+
+      // Q4 — portability
+      if (a[4] === 'very')     { scores.transport += 3; scores.manual += 2; }
+      if (a[4] === 'somewhat') { scores.manual += 2; scores.transport += 1; }
+      if (a[4] === 'little')   { scores.tilt += 2; scores.power += 1; }
+      if (a[4] === 'none')     { scores.tilt += 3; scores.standing += 2; scores.power += 2; }
+
+      // Q5 — posture
+      if (a[5] === 'upright')  { scores.manual += 2; scores.sports += 2; }
+      if (a[5] === 'some')     { scores.tilt   += 2; scores.power  += 1; }
+      if (a[5] === 'tilt')     { scores.tilt   += 5; }
+      if (a[5] === 'standing') { scores.standing += 5; scores.power += 1; }
+
+      // Q6 — caregiver
+      if (a[6] === 'self')     { scores.manual += 3; scores.sports += 2; }
+      if (a[6] === 'assisted') { scores.transport += 4; }
+      if (a[6] === 'mixed')    { scores.manual += 2; scores.transport += 2; }
+      if (a[6] === 'power')    { scores.power += 4; scores.standing += 2; }
+
+      // Q7 — day-to-day use
+      if (a[7] === 'active')    { scores.manual += 3; scores.power += 1; }
+      if (a[7] === 'comfort')   { scores.tilt   += 3; scores.power += 2; }
+      if (a[7] === 'sport')     { scores.sports += 5; }
+      if (a[7] === 'occasional'){ scores.transport += 3; scores.manual += 1; }
+
+      // Sort by score desc
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      return sorted; // [[key, score], ...]
+    }
+
+    /* ── SHOW / HIDE STEPS ── */
+    function showStep(n) {
+      document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById('step-' + n);
+      if (el) {
+        el.classList.add('active');
+        el.focus();
+        // Restore selected state
+        const q = n;
+        if (answers[q]) {
+          el.querySelectorAll('.quiz-option').forEach(btn => {
+            if (btn.dataset.val === answers[q]) {
+              btn.classList.add('selected');
+              btn.setAttribute('aria-pressed', 'true');
+            }
+          });
+          const nextBtn = el.querySelector('[id^="next-"], [id="submit-quiz"]');
+          if (nextBtn) { nextBtn.disabled = false; nextBtn.removeAttribute('aria-disabled'); }
+        }
+      }
+      updateProgress(n);
+    }
+
+    function updateProgress(step) {
+      const pct = Math.round(((step - 1) / TOTAL_STEPS) * 100);
+      document.getElementById('quiz-progress-fill').style.width = pct + '%';
+      document.getElementById('progress-bar-wrap').setAttribute('aria-valuenow', pct);
+      document.getElementById('step-label').textContent = 'Question ' + step + ' of ' + TOTAL_STEPS;
+      document.getElementById('step-pct').textContent   = pct + '%';
+    }
+
+    /* ── OPTION SELECTION ── */
+    document.querySelectorAll('.quiz-option').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const q   = parseInt(this.dataset.q);
+        const val = this.dataset.val;
+        answers[q] = val;
+
+        // Deselect siblings
+        const siblings = this.closest('.quiz-options').querySelectorAll('.quiz-option');
+        siblings.forEach(s => {
+          s.classList.remove('selected');
+          s.setAttribute('aria-pressed', 'false');
+        });
+
+        // Select this
+        this.classList.add('selected');
+        this.setAttribute('aria-pressed', 'true');
+
+        // Enable next
+        const step = document.getElementById('step-' + q);
+        const nextBtn = step.querySelector('[id^="next-"], [id="submit-quiz"]');
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.removeAttribute('aria-disabled');
+        }
+
+        // Announce
+        const announcer = document.getElementById('a11y-announcer');
+        if (announcer) {
+          announcer.textContent = '';
+          requestAnimationFrame(() => {
+            announcer.textContent = this.querySelector('.option-label').textContent + ' selected.';
+          });
+        }
+      });
+    });
+
+    /* ── NEXT / BACK WIRING ── */
+    for (let i = 1; i <= TOTAL_STEPS - 1; i++) {
+      (function (step) {
+        const nextBtn = document.getElementById('next-' + step);
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            currentStep = step + 1;
+            showStep(currentStep);
+          });
+        }
+        const backBtn = document.getElementById('back-' + step);
+        if (backBtn) {
+          backBtn.addEventListener('click', () => {
+            currentStep = step - 1;
+            showStep(currentStep);
+          });
+        }
+      })(i);
+    }
+
+    // Last back button (back-7 takes to step 6)
+    const back7 = document.getElementById('back-7');
+    if (back7) back7.addEventListener('click', () => { currentStep = 6; showStep(6); });
+
+    /* ── SUBMIT ── */
+    document.getElementById('submit-quiz').addEventListener('click', function () {
+      if (this.disabled) return;
+      showResults();
+    });
+
+    function showResults() {
+      // Hide questions
+      document.getElementById('quiz-questions').setAttribute('aria-hidden', 'true');
+      document.getElementById('quiz-progress-wrap').setAttribute('aria-hidden', 'true');
+
+      const sorted = calculateResult();
+      const [primaryKey] = sorted[0];
+      const primary = PROFILES[primaryKey];
+
+      // Populate primary
+      document.getElementById('result-icon').textContent       = primary.icon;
+      document.getElementById('result-title').textContent      = primary.name;
+      document.getElementById('result-why').textContent        = primary.why;
+      document.getElementById('result-name-inline').textContent = primary.name;
+
+      // Populate secondaries (next 2)
+      const grid = document.getElementById('result-secondary-grid');
+      grid.innerHTML = '';
+      sorted.slice(1, 3).forEach(([key]) => {
+        const p = PROFILES[key];
+        const card = document.createElement('div');
+        card.className = 'result-secondary-card';
+        card.innerHTML = `
+          <span class="option-icon" aria-hidden="true">${p.icon}</span>
+          <span class="option-label">${p.name}</span>
+          <span class="option-desc">${p.why.substring(0, 90)}…</span>`;
+        grid.appendChild(card);
+      });
+
+      // Progress to 100%
+      document.getElementById('quiz-progress-fill').style.width = '100%';
+      document.getElementById('progress-bar-wrap').setAttribute('aria-valuenow', '100');
+      document.getElementById('step-label').textContent = 'Complete';
+      document.getElementById('step-pct').textContent   = '100%';
+
+      // Show results
+      const resultsEl = document.getElementById('quiz-results');
+      resultsEl.classList.add('active');
+      resultsEl.focus();
+
+      // Announce
+      const announcer = document.getElementById('a11y-announcer');
+      if (announcer) {
+        announcer.textContent = '';
+        requestAnimationFrame(() => {
+          announcer.textContent = 'Results ready. Your top recommendation is: ' + primary.name;
+        });
+      }
+    }
+
+    /* ── RETAKE ── */
+    document.getElementById('retake-quiz').addEventListener('click', function () {
+      // Reset state
+      Object.keys(answers).forEach(k => delete answers[k]);
+      currentStep = 1;
+
+      // Unselect all options
+      document.querySelectorAll('.quiz-option').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+
+      // Disable all next buttons
+      document.querySelectorAll('[id^="next-"], #submit-quiz').forEach(btn => {
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+      });
+
+      // Hide results, show questions
+      document.getElementById('quiz-results').classList.remove('active');
+      document.getElementById('quiz-questions').removeAttribute('aria-hidden');
+      document.getElementById('quiz-progress-wrap').removeAttribute('aria-hidden');
+
+      showStep(1);
+    });
+
+    /* ── KEYBOARD: space/enter selects option buttons ── */
+    document.querySelectorAll('.quiz-option').forEach(btn => {
+      btn.addEventListener('keydown', function (e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          this.click();
+        }
+      });
+    });
+
+    /* ── INIT ── */
+    showStep(1);
+
+  }());
+  </script>
+</body>
+</html>

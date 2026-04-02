@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The history of wheelchairs — an interactive horizontal timeline from ancient times to today. Part of MyMobility, a WCAG 2.1 AAA compliant accessibility guide." />
+  <title>History of Wheelchairs — MyMobility</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════
+       HISTORY PAGE — TIMELINE STYLES
+    ══════════════════════════════════ */
+
+    /* Page hero */
+    .history-hero {
+      background: var(--clr-accent);
+      color: var(--clr-bg);
+      padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .history-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .history-hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .history-hero .section-tag {
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.3);
+    }
+    .history-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: #fff;
+      line-height: 1.1;
+      margin: var(--space-md) 0 var(--space-lg);
+    }
+    .history-hero h1 em {
+      color: rgba(255,255,255,0.65);
+      font-style: italic;
+    }
+    .history-hero p {
+      color: rgba(255,255,255,0.85);
+      font-size: var(--text-lg);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+    .history-scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-top: var(--space-xl);
+      color: rgba(255,255,255,0.65);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .history-scroll-hint .hint-arrow {
+      font-size: 1.4rem;
+      animation: nudgeRight 1.6s ease-in-out infinite;
+    }
+    @keyframes nudgeRight {
+      0%, 100% { transform: translateX(0); }
+      50%       { transform: translateX(6px); }
+    }
+    [data-reduce-motion="true"] .hint-arrow { animation: none; }
+
+    /* ── TIMELINE WRAPPER ── */
+    .timeline-section {
+      background: var(--clr-bg);
+      padding: 0;
+      position: relative;
+    }
+
+    /* The horizontal scroll container */
+    .timeline-scroll {
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 4rem 0 3rem;
+      cursor: grab;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      /* Custom scrollbar */
+      scrollbar-width: thin;
+      scrollbar-color: var(--clr-accent) var(--clr-bg-alt);
+    }
+    .timeline-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+    .timeline-scroll::-webkit-scrollbar-track {
+      background: var(--clr-bg-alt);
+    }
+    .timeline-scroll::-webkit-scrollbar-thumb {
+      background: var(--clr-accent);
+      border-radius: 3px;
+    }
+    .timeline-scroll.is-grabbing {
+      cursor: grabbing;
+    }
+
+    /* The actual timeline track */
+    .timeline-track {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-width: max-content;
+      padding: 0 clamp(2rem, 6vw, 5rem);
+      position: relative;
+    }
+
+    /* Central horizontal spine line */
+    .timeline-track::before {
+      content: '';
+      position: absolute;
+      top: calc(50% + 2.5rem); /* align with dots */
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--clr-accent) 5%,
+        var(--clr-accent) 95%,
+        transparent 100%
+      );
+      z-index: 0;
+    }
+
+    /* ── INDIVIDUAL EVENT CARD ── */
+    .tl-event {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 280px;
+      flex-shrink: 0;
+      position: relative;
+      padding-top: 0;
+    }
+
+    /* Alternate above/below */
+    .tl-event:nth-child(odd)  { flex-direction: column; }
+    .tl-event:nth-child(even) { flex-direction: column-reverse; }
+
+    /* The card */
+    .tl-card {
+      background: var(--clr-surface);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      width: 240px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      /* Revealed by JS when in view */
+    }
+    .tl-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow var(--transition), border-color var(--transition);
+    }
+    .tl-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--clr-accent-light);
+      transform: translateY(-3px);
+    }
+    .tl-event:nth-child(even) .tl-card:hover {
+      transform: translateY(3px);
+    }
+
+    /* Card image */
+    .tl-img-wrap {
+      width: 100%;
+      height: 130px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+      background: var(--clr-bg-alt);
+    }
+    .tl-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Year badge */
+    .tl-year {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--clr-accent);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+    }
+    .tl-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--clr-ink);
+      margin-bottom: var(--space-xs);
+      line-height: 1.3;
+    }
+    .tl-body {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      line-height: 1.6;
+    }
+
+    /* Connector: vertical stem from card to dot */
+    .tl-stem {
+      width: 2px;
+      height: 2.5rem;
+      background: var(--clr-accent);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* The dot on the spine */
+    .tl-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+      border: 3px solid var(--clr-bg);
+      box-shadow: 0 0 0 2px var(--clr-accent);
+      flex-shrink: 0;
+      z-index: 2;
+      position: relative;
+      transition: transform var(--transition), background var(--transition);
+    }
+    .tl-event:hover .tl-dot {
+      transform: scale(1.3);
+      background: var(--clr-highlight);
+      box-shadow: 0 0 0 2px var(--clr-highlight);
+    }
+
+    /* Spacer below/above dot for even items to visually balance */
+    .tl-event:nth-child(even) .tl-dot-spacer {
+      height: 18px; /* height of dot, keeps spacing symmetric */
+      flex-shrink: 0;
+    }
+
+    /* High-contrast overrides */
+    [data-high-contrast="true"] .tl-card {
+      border-color: var(--clr-ink);
+      background: var(--clr-bg);
+    }
+    [data-high-contrast="true"] .tl-dot {
+      background: var(--clr-accent);
+      border-color: var(--clr-bg);
+      box-shadow: 0 0 0 2px var(--clr-accent);
+    }
+    [data-high-contrast="true"] .timeline-track::before {
+      background: var(--clr-accent);
+    }
+
+    /* ── KEYBOARD NAV CONTROLS ── */
+    .timeline-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      padding: var(--space-xl) var(--space-md);
+      background: var(--clr-bg-alt);
+      border-top: 1px solid var(--clr-border);
+    }
+    .tl-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--clr-surface);
+      color: var(--clr-ink);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      text-decoration: none;
+    }
+    .tl-nav-btn:hover {
+      background: var(--clr-accent-bg);
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+    }
+    .tl-nav-btn:focus-visible {
+      outline: 3px solid var(--clr-focus);
+      outline-offset: 3px;
+      background: var(--clr-focus-bg);
+      color: var(--clr-ink);
+    }
+    .timeline-progress {
+      font-size: var(--text-sm);
+      color: var(--clr-ink-muted);
+      font-weight: 500;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    /* ── ERA LABELS ── */
+    .tl-era {
+      position: absolute;
+      top: calc(50% + 2.5rem + 18px);
+      left: 0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clr-ink-muted);
+      white-space: nowrap;
+    }
+
+    /* ── PAGE-LEVEL NAV (back to main, to quiz) ── */
+    .page-links {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      padding: var(--space-xl) clamp(1.5rem, 5vw, 4rem);
+      background: var(--clr-bg);
+      border-top: 1px solid var(--clr-border);
+      max-width: 100%;
+    }
+    .page-links .btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    /* Reduce motion: no card reveal animation */
+    [data-reduce-motion="true"] .tl-card {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    [data-reduce-motion="true"] .tl-card.visible {
+      transition: none;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .tl-event { width: 220px; }
+      .tl-card  { width: 190px; padding: var(--space-md); }
+      .tl-img-wrap { height: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SKIP NAVIGATION -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-nav" class="skip-link">Skip to navigation</a>
+
+  <!-- ACCESSIBILITY TOOLBAR -->
+  <div class="a11y-toolbar" role="region" aria-label="Accessibility controls">
+    <span class="toolbar-label" aria-hidden="true">Accessibility</span>
+    <div class="toolbar-controls">
+      <button id="btn-text-decrease" class="toolbar-btn" aria-label="Decrease text size" title="Decrease text size"><span aria-hidden="true">A−</span></button>
+      <button id="btn-text-reset"    class="toolbar-btn" aria-label="Reset text size to default" title="Reset text size"><span aria-hidden="true">A</span></button>
+      <button id="btn-text-increase" class="toolbar-btn" aria-label="Increase text size" title="Increase text size"><span aria-hidden="true">A+</span></button>
+      <div class="toolbar-divider" role="separator"></div>
+      <button id="btn-high-contrast" class="toolbar-btn" aria-label="Toggle high contrast mode" aria-pressed="false" title="High contrast mode"><span aria-hidden="true">◑</span></button>
+      <button id="btn-dyslexia"      class="toolbar-btn" aria-label="Toggle dyslexia-friendly font" aria-pressed="false" title="Dyslexia-friendly font"><span aria-hidden="true">Aa</span></button>
+      <button id="btn-reduce-motion" class="toolbar-btn" aria-label="Toggle reduced motion" aria-pressed="false" title="Reduce animations"><span aria-hidden="true">⏸</span></button>
+      <div class="toolbar-divider" role="separator"></div>
+      <div class="toolbar-select-wrap">
+        <label for="select-colorblind" class="sr-only">Colour blind mode</label>
+        <select id="select-colorblind" class="toolbar-select" aria-label="Select colour blind simulation mode" title="Colour blind mode">
+          <option value="none">Colour</option>
+          <option value="deuteranopia">Deuteranopia</option>
+          <option value="protanopia">Protanopia</option>
+          <option value="tritanopia">Tritanopia</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER & NAV -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo" aria-label="MyMobility home">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">My<strong>Mobility</strong></span>
+      </a>
+      <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+        <ul id="nav-menu" class="nav-list" role="list">
+          <li><a href="index.html#about"         class="nav-link">About</a></li>
+          <li><a href="index.html#types"         class="nav-link">Types</a></li>
+          <li><a href="index.html#features"      class="nav-link">Features</a></li>
+          <li><a href="index.html#accessibility" class="nav-link">Accessibility</a></li>
+          <li><a href="index.html#resources"     class="nav-link">Resources</a></li>
+          <li><a href="history.html"             class="nav-link" aria-current="page">History</a></li>
+          <li><a href="quiz.html"                class="nav-link">Quiz</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+
+    <!-- HERO -->
+    <section class="history-hero" aria-labelledby="history-heading">
+      <div class="history-hero-inner">
+        <span class="section-tag">Timeline</span>
+        <h1 id="history-heading">
+          Rolling through history<br>
+          <em>centuries of mobility innovation.</em>
+        </h1>
+        <p>From ancient wheeled thrones to today's high-tech power chairs, discover how wheelchair design evolved alongside medicine, engineering, and the disability rights movement.</p>
+        <div class="history-scroll-hint" aria-hidden="true">
+          <span>Scroll to explore</span>
+          <span class="hint-arrow">→</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="timeline-section" aria-labelledby="timeline-section-heading">
+      <h2 id="timeline-section-heading" class="sr-only">Wheelchair history timeline — scroll horizontally to explore events from antiquity to the present day</h2>
+
+      <!-- Keyboard / button nav -->
+      <div class="timeline-nav" role="group" aria-label="Timeline navigation controls">
+        <button class="tl-nav-btn" id="tl-prev" aria-label="Scroll timeline to earlier events">← Earlier</button>
+        <span class="timeline-progress" id="tl-progress" aria-live="polite" aria-atomic="true">1 of 18</span>
+        <button class="tl-nav-btn" id="tl-next" aria-label="Scroll timeline to later events">Later →</button>
+      </div>
+
+      <div class="timeline-scroll" id="timeline-scroll" role="region" aria-label="Scrollable wheelchair history timeline" tabindex="0">
+        <div class="timeline-track" id="timeline-track">
+
+          <!-- ① ~525 CE -->
+          <article class="tl-event" aria-labelledby="tl-title-1">
+            <div class="tl-card" tabindex="0" aria-label="Around 525 CE — The Wheeled Chair of China">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://history.physio/wp-content/uploads/2019/01/Ancient_Chinese_engraving_of_wheelchair_c._525AD.jpg"
+                  alt="Ancient Chinese stone carving detail showing seated figure, representing early depictions of mobility aids in ancient China"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">~525 CE</span>
+              <h3 id="tl-title-1" class="tl-title">China's Wheeled Chair</h3>
+              <p class="tl-body">One of the earliest depictions of a wheeled chair appears on a Chinese stone slab. Wheeled platforms for mobility were noted across Chinese texts of this era, predating European designs by centuries.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ② 1595 -->
+          <article class="tl-event" aria-labelledby="tl-title-2">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="1595 — Philip II of Spain's Invalid Chair">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://www.civilwarmed.org/wp-content/uploads/2019/07/wheelchair-1-Italian-Chair-18th-Century-732x1024.jpg"
+                  alt="Ornate carved wooden armchair with large side wheels, representing the style of 16th century European invalid chairs"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1595</span>
+              <h3 id="tl-title-2" class="tl-title">Philip II of Spain</h3>
+              <p class="tl-body">King Philip II of Spain, suffering from gout, used a specially designed chair fitted with wheels, armrests, and a leg rest — one of the first documented European wheelchair-like devices built for a specific individual.</p>
+            </div>
+          </article>
+
+          <!-- ③ 1655 -->
+          <article class="tl-event" aria-labelledby="tl-title-3">
+            <div class="tl-card" tabindex="0" aria-label="1655 — Stephan Farffler's Self-Propelling Chair">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcReX7-6BTlTZ1-OfOcol1hc6xnl9b5gc_Wy0mgLzMooz9WQ1uLC"
+                  alt="Close-up of a mechanical gear and crank mechanism, representing the hand-crank propulsion invention of Stephan Farffler"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1655</span>
+              <h3 id="tl-title-3" class="tl-title">Farffler's Hand-Crank Chair</h3>
+              <p class="tl-body">German watchmaker Stephan Farffler, paraplegic from age three, built a three-wheeled hand-cranked chair. It is widely regarded as the first self-propelling wheelchair — a remarkable feat of personal engineering.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ④ 1783 -->
+          <article class="tl-event" aria-labelledby="tl-title-4">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="1783 — John Dawson's Bath Chair">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKnduBS-W8GAV_TCPeNcyPxolCLh0B5mHRxBQo_tLD6qwqTpTP"
+                  alt="Georgian-era cobblestone street in Bath, England, evoking the spa town context in which the Bath Chair became fashionable"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1783</span>
+              <h3 id="tl-title-4" class="tl-title">The Bath Chair</h3>
+              <p class="tl-body">John Dawson of Bath, England, designed the "Bath Chair" — a three-wheeled, hooded chair for invalids pushed by an attendant. It became fashionable across Europe and spread wheelchair use among the wealthy.</p>
+            </div>
+          </article>
+
+          <!-- ⑤ 1869 -->
+          <article class="tl-event" aria-labelledby="tl-title-5">
+            <div class="tl-card" tabindex="0" aria-label="1869 — First Patent for a Wheelchair">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://images.pexels.com/photos/5668772/pexels-photo-5668772.jpeg?auto=compress&cs=tinysrgb&w=480&h=260&fit=crop&crop=center"
+                  alt="Aged patent document pages with handwriting and technical drawings, representing 19th century wheelchair innovation"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1869</span>
+              <h3 id="tl-title-5" class="tl-title">First Wheelchair Patent</h3>
+              <p class="tl-body">The first US patent for a wheelchair was filed, describing a chair with small front wheels and large rear wheels — a layout still recognisable today. Innovation accelerated as industrialisation made manufacturing cheaper.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑥ 1900s – WWI -->
+          <article class="tl-event" aria-labelledby="tl-title-6">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="Early 1900s — Steel Chairs and World War I Veterans">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://images.pexels.com/photos/5717703/pexels-photo-5717703.jpeg?auto=compress&cs=tinysrgb&w=480&h=260&fit=crop&crop=center"
+                  alt="Black and white style photo of a hospital ward with rows of beds, evoking the World War I medical rehabilitation era"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">Early 1900s</span>
+              <h3 id="tl-title-6" class="tl-title">WWI & Steel Chairs</h3>
+              <p class="tl-body">World War I created an enormous demand for rehabilitation equipment. Steel-framed wheelchairs replaced wood, and veterans' hospitals drove rapid improvements in durability, adjustability, and standardised manufacturing.</p>
+            </div>
+          </article>
+
+          <!-- ⑦ 1933 -->
+          <article class="tl-event" aria-labelledby="tl-title-7">
+            <div class="tl-card" tabindex="0" aria-label="1933 — The Everest and Jennings Folding Chair">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://images.pexels.com/photos/4386476/pexels-photo-4386476.jpeg?auto=compress&cs=tinysrgb&w=480&h=260&fit=crop&crop=center"
+                  alt="A lightweight folded wheelchair leaning against a wall, representing the revolutionary folding frame design of 1933"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1933</span>
+              <h3 id="tl-title-7" class="tl-title">The Folding Chair Revolution</h3>
+              <p class="tl-body">Herbert Everest and Harry Jennings — the former a wheelchair user himself — patented the first lightweight, foldable, tubular steel wheelchair. Their design dominated the market for decades and became the global template.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑧ 1950s -->
+          <article class="tl-event" aria-labelledby="tl-title-8">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="1950s — Electric Wheelchairs Emerge">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://news.engineering.utoronto.ca/wp-content/uploads/sites/18/2017/01/Klein_Owens_chair.jpg"
+                  alt="A modern electric power wheelchair with joystick control, representing the lineage of motorised wheelchairs developed since the 1950s"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1950s</span>
+              <h3 id="tl-title-8" class="tl-title">The First Power Chairs</h3>
+              <p class="tl-body">Canadian engineer George Klein developed the first electric wheelchair for veterans with spinal cord injuries. Bulky by today's standards, it laid the foundation for all modern power chairs, transforming independence for people without upper-body strength.</p>
+            </div>
+          </article>
+
+          <!-- ⑨ 1960s – Disability Rights -->
+          <article class="tl-event" aria-labelledby="tl-title-9">
+            <div class="tl-card" tabindex="0" aria-label="1960s — The Disability Rights Movement Begins">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://www.naacpldf.org/wp-content/uploads/gettyimages-1098006690-594x594-1.jpg"
+                  alt="Protesters holding signs advocating for disability rights and accessibility, representing the civil rights movement of the 1960s"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1960s</span>
+              <h3 id="tl-title-9" class="tl-title">Disability Rights Movement</h3>
+              <p class="tl-body">Inspired by the civil rights movement, disability activists in the US began demanding accessible public spaces, transport, and housing. Ed Roberts at Berkeley became a leading figure, using a motorised wheelchair and advocating for independent living.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑩ 1975 – Sports Wheelchair -->
+          <article class="tl-event" aria-labelledby="tl-title-10">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="1975 — Sports Wheelchairs Take Off">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS21oDBc_uh7BFxWIfSU2zgLD_ApJ1RrQW7tg&s"
+                  alt="Athlete in a racing wheelchair leaning into a fast turn on a track, representing the rise of adaptive sports in the 1970s and 1980s"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1975</span>
+              <h3 id="tl-title-10" class="tl-title">Sports Chairs Take Off</h3>
+              <p class="tl-body">The first wheelchair marathon entrants appeared in Boston. Ultra-light, angled racing chairs began to be purpose-designed for athletics. The 1976 Paralympics in Toronto cemented wheelchair sport as a serious competitive discipline worldwide.</p>
+            </div>
+          </article>
+
+          <!-- ⑪ 1990 – ADA -->
+          <article class="tl-event" aria-labelledby="tl-title-11">
+            <div class="tl-card" tabindex="0" aria-label="1990 — Americans with Disabilities Act Signed">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://cdn.britannica.com/18/142518-050-D3CF6FF3/Pres-George-HW-Bush-Americans-with-Disabilities-July-26-1990.jpg"
+                  alt="The US Capitol building in Washington D.C., where the Americans with Disabilities Act was passed into law in 1990"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1990</span>
+              <h3 id="tl-title-11" class="tl-title">Americans with Disabilities Act</h3>
+              <p class="tl-body">President George H.W. Bush signed the ADA into law — a landmark civil rights act prohibiting discrimination and requiring accessible public accommodation, transportation, and employment. It transformed built environments globally.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑫ 1994 – Lightweight Aluminium -->
+          <article class="tl-event" aria-labelledby="tl-title-12">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="1990s — Ultralight Aluminium and Titanium Frames">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG92tY0eRyrAVpRoKhEKp_q27B-TvhIU7C2g&s"
+                  alt="Close-up of a shiny aluminium bicycle frame tube, representing the lightweight metals adopted in modern wheelchair construction"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">1990s</span>
+              <h3 id="tl-title-12" class="tl-title">Ultralight Materials Era</h3>
+              <p class="tl-body">Aluminium alloys and titanium frames brought manual wheelchairs under 10 kg. Rigid frames improved propulsion efficiency dramatically. Carbon-fibre composites followed, making high-performance chairs lighter than a typical laptop.</p>
+            </div>
+          </article>
+
+          <!-- ⑬ 2001 – iBot -->
+          <article class="tl-event" aria-labelledby="tl-title-13">
+            <div class="tl-card" tabindex="0" aria-label="2001 — The iBot Stair-Climbing Wheelchair">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://newmobility.com/wp-content/uploads/2021/06/July19Feat.jpg"
+                  alt="A set of concrete stairs viewed from below, representing the architectural barrier that the iBot was designed to overcome"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">2001</span>
+              <h3 id="tl-title-13" class="tl-title">The iBot Stair-Climber</h3>
+              <p class="tl-body">Dean Kamen (inventor of the Segway) introduced the iBot — a gyroscope-stabilised power wheelchair that could climb stairs, traverse rough terrain, and raise users to standing eye level. It was a technological leap that inspired future designs.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑭ 2006 – UN CRPD -->
+          <article class="tl-event" aria-labelledby="tl-title-14">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="2006 — UN Convention on the Rights of Persons with Disabilities">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6-rzTGdaXw5MpxlI2aU97GvuuH71r6CqUeA&s"
+                  alt="United Nations building with flags of member nations flying outside, representing the 2006 UN disability rights convention"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">2006</span>
+              <h3 id="tl-title-14" class="tl-title">UN Disability Convention</h3>
+              <p class="tl-body">The United Nations adopted the Convention on the Rights of Persons with Disabilities (CRPD) — the first comprehensive human rights treaty of the 21st century specifically addressing disability, signed by 164 countries.</p>
+            </div>
+          </article>
+
+          <!-- ⑮ 2010s – Smart Chairs -->
+          <article class="tl-event" aria-labelledby="tl-title-15">
+            <div class="tl-card" tabindex="0" aria-label="2010s — Smart Wheelchairs and Brain-Computer Interfaces">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://images.pexels.com/photos/3912981/pexels-photo-3912981.jpeg?auto=compress&cs=tinysrgb&w=480&h=260&fit=crop&crop=center"
+                  alt="A researcher working with electronic sensors and circuit boards, representing the smart wheelchair and brain-computer interface research of the 2010s"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">2010s</span>
+              <h3 id="tl-title-15" class="tl-title">Smart Chairs &amp; BCI Research</h3>
+              <p class="tl-body">Researchers developed wheelchairs controlled by eye-tracking, voice commands, and brain-computer interfaces (BCI), enabling use by people with severe paralysis. Obstacle-avoidance AI and autonomous navigation entered the prototype stage.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑯ 2016 – Paralympics -->
+          <article class="tl-event" aria-labelledby="tl-title-16">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="2016 — Rio Paralympics: Wheelchair Sport at Its Peak">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://a.espncdn.com/photo/2012/0907/espnw_paralympics_08.jpg"
+                  alt="Wheelchair basketball players in intense competition on an indoor court, representing the high level of Paralympic sport"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">2016</span>
+              <h3 id="tl-title-16" class="tl-title">Rio Paralympics</h3>
+              <p class="tl-body">The Rio 2016 Paralympics showcased wheelchair athletes at the highest level of human performance. Racing chairs reached speeds over 40 km/h, and wheelchair basketball drew global audiences. Adaptive sport culture shifted mainstream perceptions of disability.</p>
+            </div>
+          </article>
+
+          <!-- ⑰ 2020s – Standing Chairs -->
+          <article class="tl-event" aria-labelledby="tl-title-17">
+            <div class="tl-card" tabindex="0" aria-label="2020s — Standing Wheelchairs and Exoskeletons">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://www.nsm-seating.ca/uploads/ecommerce/m-corpus-vs-standing-wheelchair-985.jpg?v=1716351337"
+                  alt="A physical therapist assisting a patient with a robotic exoskeleton device, representing the convergence of standing wheelchairs and wearable robotics"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">2020s</span>
+              <h3 id="tl-title-17" class="tl-title">Standing Chairs &amp; Exoskeletons</h3>
+              <p class="tl-body">Commercially available standing power wheelchairs allow users to raise themselves to standing height, improving health outcomes and social interaction. Wearable robotic exoskeletons now complement wheelchair use, blurring the boundaries of assistive technology.</p>
+            </div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-dot" aria-hidden="true"></div>
+          </article>
+
+          <!-- ⑱ Future -->
+          <article class="tl-event" aria-labelledby="tl-title-18">
+            <div class="tl-dot" aria-hidden="true"></div>
+            <div class="tl-stem" aria-hidden="true"></div>
+            <div class="tl-card" tabindex="0" aria-label="The Future — AI, Robotics, and Universal Design">
+              <div class="tl-img-wrap">
+                <img
+                  src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=480&h=260&fit=crop&crop=center"
+                  alt="An abstract digital circuit pattern in blue and green light, representing the future of AI-driven assistive mobility technology"
+                  class="tl-img" loading="lazy" decoding="async" width="480" height="260" />
+              </div>
+              <span class="tl-year">Future</span>
+              <h3 id="tl-title-18" class="tl-title">What Comes Next</h3>
+              <p class="tl-body">AI-powered autonomous wheelchairs, modular 3D-printed frames, neural-interface controls, and universal design principles are reshaping mobility. The goal: a world where no one is excluded by the limitations of either their body or their environment.</p>
+            </div>
+          </article>
+
+        </div><!-- /timeline-track -->
+      </div><!-- /timeline-scroll -->
+
+    </section>
+
+    <!-- BOTTOM PAGE LINKS -->
+    <div class="page-links">
+      <a href="index.html" class="btn btn-secondary"><span aria-hidden="true">←</span> Back to Guide</a>
+      <a href="quiz.html"  class="btn btn-primary">Take the Quiz <span aria-hidden="true">→</span></a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon" aria-hidden="true">⬡</span>
+        <span class="logo-text">My<strong>Mobility</strong></span>
+        <p class="footer-tagline">Built with accessibility first.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <ul role="list">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#types">Types</a></li>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#accessibility">WCAG</a></li>
+          <li><a href="index.html#resources">Resources</a></li>
+          <li><a href="history.html">History</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+        </ul>
+      </nav>
+      <div class="footer-compliance">
+        <p><strong>WCAG 2.1 Level AAA</strong> compliant. Accessible to screen readers, keyboard users, and low-vision users.</p>
+        <p class="footer-note">Timeline images via <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer">Pexels</a> under the Pexels free-use licence.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MyMobility. Created for accessibility awareness.</p>
+    </div>
+  </footer>
+
+  <div id="a11y-announcer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+  <script src="script.js"></script>
+  <script>
+  /* ════════════════════════════════════════
+     TIMELINE PAGE SCRIPT
+  ════════════════════════════════════════ */
+  (function () {
+    'use strict';
+
+    const scroll   = document.getElementById('timeline-scroll');
+    const track    = document.getElementById('timeline-track');
+    const prevBtn  = document.getElementById('tl-prev');
+    const nextBtn  = document.getElementById('tl-next');
+    const progress = document.getElementById('tl-progress');
+    const events   = Array.from(track.querySelectorAll('.tl-event'));
+    const TOTAL    = events.length;
+
+    /* ── CARD REVEAL ON SCROLL (IntersectionObserver) ── */
+    if ('IntersectionObserver' in window) {
+      const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelector('.tl-card').classList.add('visible');
+            revealObs.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: scroll,
+        rootMargin: '0px -10% 0px -10%',
+        threshold: 0.15
+      });
+      events.forEach(ev => revealObs.observe(ev));
+    } else {
+      /* Fallback: show all cards immediately */
+      events.forEach(ev => ev.querySelector('.tl-card').classList.add('visible'));
+    }
+
+    /* ── PROGRESS COUNTER ── */
+    function updateProgress() {
+      const scrollLeft = scroll.scrollLeft;
+      const maxScroll  = scroll.scrollWidth - scroll.clientWidth;
+      const fraction   = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+      const idx        = Math.min(TOTAL - 1, Math.round(fraction * (TOTAL - 1)));
+      progress.textContent = (idx + 1) + ' of ' + TOTAL;
+    }
+
+    /* ── BUTTON NAV ── */
+    function getStep() {
+      return events[0] ? events[0].offsetWidth + 0 : 300;
+    }
+    prevBtn.addEventListener('click', () => {
+      scroll.scrollBy({ left: -getStep(), behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', () => {
+      scroll.scrollBy({ left: getStep(), behavior: 'smooth' });
+    });
+
+    scroll.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    /* ── KEYBOARD SCROLL inside timeline region ── */
+    scroll.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        scroll.scrollBy({ left: getStep(), behavior: 'smooth' });
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        scroll.scrollBy({ left: -getStep(), behavior: 'smooth' });
+      }
+    });
+
+    /* ── DRAG TO SCROLL (mouse) ── */
+    let isDown = false, startX = 0, scrollLeftStart = 0;
+    scroll.addEventListener('mousedown', e => {
+      isDown = true;
+      scroll.classList.add('is-grabbing');
+      startX = e.pageX - scroll.offsetLeft;
+      scrollLeftStart = scroll.scrollLeft;
+    });
+    document.addEventListener('mouseup', () => {
+      isDown = false;
+      scroll.classList.remove('is-grabbing');
+    });
+    scroll.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x    = e.pageX - scroll.offsetLeft;
+      const walk = (x - startX) * 1.4;
+      scroll.scrollLeft = scrollLeftStart - walk;
+    });
+
+  }());
+  </script>
+</body>
+</html>
